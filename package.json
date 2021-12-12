@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "changeset:add": "changeset",
-    "release": "npm run build && changeset publish",
+    "release-ci": "lerna publish from-package -y --no-verify-access",
     "test": "echo \"Error: no test specified\" && exit 1",
     "testing": "node packages/create-phils-app/bin/create-phils-app.js"
   },
