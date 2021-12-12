@@ -8,7 +8,7 @@
     "author": "",
     "license": "MIT",
     "dependencies": {
-      "generator-phils-spa": "0.0.1",
+      "generator-phils-app": "0.0.1",
       "yargs": "^17.1.1",
       "yeoman-environment": "^3.6.0"
     }
