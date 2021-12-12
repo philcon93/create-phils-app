@@ -1,0 +1,26 @@
+{
+  "name": "root",
+  "version": "1.0.0",
+  "description": "A project to make creating a react app as easy as `npx create-phils-app`.",
+  "main": "index.js",
+  "private": "true",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/philcon93/create-phils-react-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/philcon93/create-phils-react-app/issues"
+  },
+  "homepage": "https://github.com/philcon93/create-phils-react-app#readme",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

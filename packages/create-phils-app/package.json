@@ -1,0 +1,16 @@
+{
+    "name": "create-phils-app",
+    "version": "0.0.1",
+    "description": "",
+    "bin": {
+      "create-phils-app": "bin/create-phils-app.js"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "generator-phils-spa": "0.0.1",
+      "yargs": "^17.1.1",
+      "yeoman-environment": "^3.6.0"
+    }
+  }
+  
