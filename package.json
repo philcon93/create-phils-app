@@ -8,6 +8,8 @@
     "packages/*"
   ],
   "scripts": {
+    "changeset:add": "changeset",
+    "release": "npm run build && changeset publish",
     "test": "echo \"Error: no test specified\" && exit 1",
     "testing": "node packages/create-phils-app/bin/create-phils-app.js"
   },
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/philcon93/create-phils-react-app#readme",
   "devDependencies": {
+    "@changesets/cli": "^2.18.1",
     "lerna": "^4.0.0"
   }
 }
