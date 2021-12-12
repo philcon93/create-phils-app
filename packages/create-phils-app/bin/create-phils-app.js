@@ -4,7 +4,6 @@ checkNodeVersion();
 
 const yeoman = require("yeoman-environment");
 const argv = require("yargs").argv;
-const phils = require("generator-phils-app");
 
 const env = yeoman.createEnv();
 env.registerStub(require("generator-phils-app"), "single-spa");

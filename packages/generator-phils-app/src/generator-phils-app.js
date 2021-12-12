@@ -126,7 +126,7 @@ async function runFrameworkGenerator() {
       this.composeWith(
         {
           Generator: SingleSpaReactGenerator,
-          path: require.resolve("./react/generator-single-spa-react.js"),
+          path: require.resolve("./react/generator-react-app.js"),
         },
         this.options
       );

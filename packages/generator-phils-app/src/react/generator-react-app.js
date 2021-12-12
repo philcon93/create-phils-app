@@ -30,7 +30,7 @@ module.exports = class SingleSpaReactGenerator extends Generator {
         type: "list",
         name: "packageManager",
         message: "Which package manager do you want to use?",
-        choices: ["yarn", "npm"],
+        choices: ["npm", "yarn"],
         when: !this.options.packageManager,
       },
       {
@@ -62,7 +62,7 @@ module.exports = class SingleSpaReactGenerator extends Generator {
   }
   async createPackageJson() {
     this.srcFileExtension = this.options.typescript ? "tsx" : "js";
-    this.mainFile = `src/${this.options.orgName}-${this.options.projectName}.${this.srcFileExtension}`;
+    this.mainFile = `src/index.${this.srcFileExtension}`;
 
     const packageJsonTemplate = await fs.readFile(
       this.templatePath("react.package.json"),
@@ -93,106 +93,78 @@ module.exports = class SingleSpaReactGenerator extends Generator {
     this.fs.extendJSON(this.destinationPath("package.json"), packageJson);
 
     if (this.options.typescript) {
-      this.fs.extendJSON(
-        this.destinationPath("package.json"),
-        this.fs.readJSON(
-          this.templatePath(
-            "../../common-templates/typescript/typescript.package.json"
-          )
-        )
-      );
-
-      this.fs.extendJSON(
-        this.destinationPath("package.json"),
-        this.fs.readJSON(
-          this.templatePath(
-            "../../common-templates/typescript/react.package.json"
-          )
-        )
-      );
-
       // Extend with react-specific package json for typescript
       this.fs.extendJSON(
         this.destinationPath("package.json"),
         this.fs.readJSON(
           this.templatePath("typescript/typescript-react.package.json")
-        ),
-        (key, value) => {
-          if (key === "devDependencies") {
-            // Remove standard eslint configuration in favor of react specific
-            delete value["eslint-config-ts-important-stuff"];
-          }
-          return value;
-        }
+        )
       );
     }
   }
   async copyOtherFiles() {
-    this.fs.copyTpl(
-      this.templatePath("jest.config.js"),
-      this.destinationPath("jest.config.js"),
-      this.options
-    );
-    this.fs.copyTpl(
-      this.templatePath("../../common-templates/babel.config.json.ejs"),
-      this.destinationPath("babel.config.json"),
-      this.options
-    );
-    this.fs.copyTpl(
-      this.templatePath(".eslintrc.ejs"),
-      this.destinationPath(".eslintrc"),
-      this.options
-    );
+    // Common
     this.fs.copyTpl(
       this.templatePath("../../common-templates/gitignore"), // this is relative to /templates
       this.destinationPath(".gitignore"),
       this.options
     );
 
+    // Public
+
+    // Src
+    this.fs.copyTpl(
+      this.templatePath("src/App.css"),
+      this.destinationPath("src/App.css"),
+      this.options
+    );
+    this.fs.copyTpl(
+      this.templatePath("src/App.js"),
+      this.destinationPath(`src/App.${this.srcFileExtension}`),
+      this.options
+    );
+    this.fs.copyTpl(
+      this.templatePath("src/App.test.js"),
+      this.destinationPath(`src/App.test.${this.srcFileExtension}`),
+      this.options
+    );
+    this.fs.copyTpl(
+      this.templatePath("src/index.css"),
+      this.destinationPath("src/index.css"),
+      this.options
+    );
+    this.fs.copyTpl(
+      this.templatePath("src/index.js"),
+      this.destinationPath(this.mainFile),
+      this.options
+    );
+    this.fs.copyTpl(
+      this.templatePath("src/logo.svg"),
+      this.destinationPath("src/logo.svg"),
+      this.options
+    );
+    this.fs.copyTpl(
+      this.templatePath("src/setupTests.js"),
+      this.destinationPath(`src/setupTests.${this.options.typescript ? 'ts' : 'js'}`),
+      this.options
+    );
+
+    // Typescript
     if (this.options.typescript) {
       this.fs.copyTpl(
-        this.templatePath(
-          `../../common-templates/typescript/declarations.d.ts`
-        ),
-        this.destinationPath(`src/declarations.d.ts`),
-        this.options
-      );
-    }
-    this.fs.copyTpl(
-      this.templatePath(".prettierignore"),
-      this.destinationPath(".prettierignore"),
-      this.options
-    );
-    this.fs.copyTpl(
-      this.templatePath("webpack.config.js"),
-      this.destinationPath("webpack.config.js"),
-      this.options
-    );
-    this.fs.copyTpl(
-      this.templatePath("src/root.component.js"),
-      this.destinationPath(`src/root.component.${this.srcFileExtension}`),
-      this.options
-    );
-    this.fs.copyTpl(
-      this.templatePath("src/root.component.test.js"),
-      this.destinationPath(`src/root.component.test.${this.srcFileExtension}`),
-      this.options
-    );
-    if (!this.options.skipMainFile) {
-      this.fs.copyTpl(
-        this.templatePath("src/main.js"),
-        this.destinationPath(this.mainFile),
-        this.options
-      );
-    }
-    if (this.options.typescript) {
-      this.fs.copyTpl(
-        this.templatePath("tsconfig.json"),
+        this.templatePath("typescript/tsconfig.json"),
         this.destinationPath("tsconfig.json"),
         {
           ...this.options,
           mainFile: this.mainFile,
         }
+      );
+      this.fs.copyTpl(
+        this.templatePath(
+          `typescript/react-app-env.d.ts`
+        ),
+        this.destinationPath(`src/react-app-env.d.ts`),
+        this.options
       );
     }
 
@@ -210,7 +182,6 @@ module.exports = class SingleSpaReactGenerator extends Generator {
       this.installDependencies({
         npm: this.options.packageManager === "npm",
         yarn: this.options.packageManager === "yarn",
-        pnpm: this.options.packageManager === "pnpm",
         bower: false,
       });
     }
@@ -218,14 +189,23 @@ module.exports = class SingleSpaReactGenerator extends Generator {
   finished() {
     this.on(`${this.options.packageManager}Install:end`, () => {
       console.log(
-        chalk.bgWhite.black(`Project setup complete!
-Steps to test your React single-spa application:
-1. Run '${this.options.packageManager} start${
-          this.options.packageManager === "yarn" ? "" : " --"
-        } --port 8500'
-2. Go to http://single-spa-playground.org/playground/instant-test?name=@${
-          this.options.orgName
-        }/${this.options.projectName}&url=8500 to see it working!`)
+        chalk.bgWhite.black(`
+      Success! Created @${this.options.orgName}/${this.options.projectName} at ${this.options.dir}
+      Inside that directory, you can run several commands:
+
+      yarn start
+        Starts the development server.
+
+      yarn build
+        Bundles the app into static files for production.
+
+      yarn test
+        Starts the test runner.
+
+      We suggest that you begin by typing:
+
+      cd ${this.options.dir}
+      yarn start`)
       );
     });
   }

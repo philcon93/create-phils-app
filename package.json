@@ -8,7 +8,8 @@
     "packages/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "testing": "node packages/create-phils-app/bin/create-phils-app.js"
   },
   "repository": {
     "type": "git",
