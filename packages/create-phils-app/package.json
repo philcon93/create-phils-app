@@ -1,16 +1,15 @@
 {
-    "name": "create-phils-app",
-    "version": "0.0.1",
-    "description": "",
-    "bin": {
-      "create-phils-app": "bin/create-phils-app.js"
-    },
-    "author": "",
-    "license": "MIT",
-    "dependencies": {
-      "generator-phils-app": "0.0.1",
-      "yargs": "^17.1.1",
-      "yeoman-environment": "^3.6.0"
-    }
+  "name": "create-phils-app",
+  "version": "0.1.0",
+  "description": "",
+  "bin": {
+    "create-phils-app": "bin/create-phils-app.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "generator-phils-app": "0.1.0",
+    "yargs": "^17.1.1",
+    "yeoman-environment": "^3.6.0"
   }
-  
+}
