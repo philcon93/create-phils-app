@@ -1,0 +1,36 @@
+# This workflow will either create a new PR to main with an updated CHANGELOG and updated version, or
+# Publishes the package to NPM
+
+name: Release/Publish
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release/Publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+        with:
+          # This makes Actions fetch all Git history so that Changesets can generate changelogs with the correct commits
+          fetch-depth: 0
+
+      - name: Setup Node.js 14.x
+        uses: actions/setup-node@master
+        with:
+          node-version: 14.x
+
+      - name: Install Dependencies
+        run: yarn
+        
+      - name: Create Release Pull Request or Publish to NPM
+        uses: changesets/action@master
+        with:
+          publish: yarn release-ci
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
